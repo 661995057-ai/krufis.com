@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>บทเรียนออนไลน์ วิทยาการคำนวณ ป.4</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== VARIABLES ===== */
+:root {
+  --pk1: #fdf2f8; --pk2: #fce7f3; --pk3: #f9a8d4;
+  --pk4: #f472b6; --pk5: #ec4899; --pk6: #db2777;
+  --bl1: #eff6ff; --bl2: #dbeafe; --bl3: #93c5fd;
+  --bl4: #60a5fa; --bl5: #3b82f6; --bl6: #2563eb;
+  --wh: #ffffff;
+  --g0: #f9fafb; --g1: #f3f4f6; --g2: #e5e7eb;
+  --g3: #d1d5db; --g4: #9ca3af; --g5: #6b7280;
+  --g6: #4b5563; --g7: #374151; --g8: #1f2937;
+  --green: #10b981; --amber: #f59e0b; --red: #ef4444;
+  --sh-sm: 0 1px 4px rgba(0,0,0,.06);
+  --sh-md: 0 4px 20px rgba(0,0,0,.08);
+  --sh-lg: 0 12px 48px rgba(0,0,0,.12);
+  --sh-pk: 0 8px 32px rgba(236,72,153,.20);
+  --sh-bl: 0 8px 32px rgba(59,130,246,.18);
+  --r-sm: 10px; --r-md: 16px; --r-lg: 24px; --r-xl: 32px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans Thai', 'Prompt', sans-serif;
+  background: #f5f0fa;
+  color: var(--g8); font-size: 15px; line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ===== PAGE SYSTEM ===== */
+.page { display: none; min-height: 100vh; animation: fadeIn .35s ease; }
+.page.active { display: block; }
+#page-login.active { display: flex; }
+
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+@keyframes slideUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+
+/* ===== NAVBAR ===== */
+.navbar {
+  background: rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--g2);
+  height: 60px; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: var(--sh-sm);
+}
+.nav-brand {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; text-decoration: none;
+  font-weight: 700; font-size: 15px; color: var(--g8);
+}
+.nav-logo {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--pk5), var(--bl5));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; box-shadow: var(--sh-pk);
+}
+.nav-right { display: flex; align-items: center; gap: 10px; }
+.nav-user { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--g6); }
+.nav-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pk3), var(--bl3));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; color: var(--wh);
+}
+.btn-out {
+  padding: 5px 14px; border: 1.5px solid var(--g2);
+  border-radius: 8px; background: var(--wh);
+  font-family: inherit; font-size: 13px; color: var(--g6);
+  cursor: pointer; transition: all .2s;
+}
+.btn-out:hover { background: var(--g0); border-color: var(--g3); }
+
+/* ===== LOGIN PAGE ===== */
+#page-login {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fce7f3 0%, #eff6ff 60%, #fdf2f8 100%);
+  align-items: center; justify-content: center; padding: 24px;
+  position: relative; overflow: hidden;
+}
+.login-blob {
+  position: absolute; border-radius: 50%; pointer-events: none; filter: blur(60px); opacity: .25;
+}
+.lb1 { width:500px;height:500px;background:var(--pk4);top:-150px;right:-150px; }
+.lb2 { width:400px;height:400px;background:var(--bl4);bottom:-120px;left:-120px; }
+.lb3 { width:200px;height:200px;background:var(--pk3);bottom:100px;right:200px; }
+
+.login-card {
+  background: var(--wh); border-radius: var(--r-xl);
+  padding: 44px 40px; width: 100%; max-width: 420px;
+  box-shadow: var(--sh-lg); position: relative; z-index: 1;
+  animation: slideUp .5s ease;
+}
+.login-top { text-align: center; margin-bottom: 28px; }
+.login-icon-wrap {
+  width: 76px; height: 76px; border-radius: 22px; margin: 0 auto 16px;
+  background: linear-gradient(135deg, var(--pk5), var(--bl5));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; box-shadow: var(--sh-pk);
+  animation: pulse 3s ease infinite;
+}
+.login-title { font-size: 19px; font-weight: 800; color: var(--g8); line-height: 1.35; }
+.login-school { font-size: 13px; color: var(--g5); margin-top: 5px; }
+
+.tab-row {
+  display: flex; gap: 6px;
+  background: var(--g1); border-radius: var(--r-sm);
+  padding: 4px; margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1; padding: 8px 4px; border: none; border-radius: 8px;
+  font-family: inherit; font-size: 14px; font-weight: 500;
+  color: var(--g5); cursor: pointer; transition: all .2s; background: transparent;
+}
+.tab-btn.on { background: var(--wh); color: var(--g8); box-shadow: var(--sh-sm); }
+
+.fgroup { margin-bottom: 15px; }
+.flabel { display: block; font-size: 13px; font-weight: 600; color: var(--g7); margin-bottom: 6px; }
+.finput, .fselect {
+  width: 100%; padding: 11px 14px;
+  border: 1.5px solid var(--g2); border-radius: var(--r-sm);
+  font-family: inherit; font-size: 14px; color: var(--g8);
+  background: var(--wh); outline: none; transition: all .2s;
+}
+.finput:focus, .fselect:focus {
+  border-color: var(--pk4);
+  box-shadow: 0 0 0 3px rgba(236,72,153,.10);
+}
+.fselect { cursor: pointer; }
+.btn-main {
+  width: 100%; padding: 13px;
+  background: linear-gradient(135deg, var(--pk5) 0%, var(--bl6) 100%);
+  border: none; border-radius: var(--r-sm);
+  font-family: inherit; font-size: 15px; font-weight: 700;
+  color: var(--wh); cursor: pointer; transition: all .25s;
+  box-shadow: var(--sh-pk); margin-top: 4px;
+}
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(236,72,153,.35); }
+.btn-main:active { transform: translateY(0); }
+
+.login-hint {
+  margin-top: 16px; padding: 12px 14px;
+  background: var(--bl1); border-radius: var(--r-sm);
+  font-size: 12px; color: var(--bl6); text-align: center;
+}
+
+/* ===== DASHBOARD ===== */
+.wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px; }
+
+.hero {
+  border-radius: var(--r-lg); padding: 30px 32px;
+  background: linear-gradient(135deg, var(--pk5) 0%, var(--bl6) 100%);
+  color: var(--wh); margin-bottom: 24px; position: relative; overflow: hidden;
+  animation: slideUp .4s ease;
+}
+.hero::before {
+  content:''; position: absolute;
+  top:-60px; right:-60px; width:220px; height:220px;
+  background: rgba(255,255,255,.07); border-radius: 50%;
+}
+.hero::after {
+  content:''; position: absolute;
+  bottom:-80px; right:80px; width:280px; height:280px;
+  background: rgba(255,255,255,.05); border-radius: 50%;
+}
+.hero-greet { font-size: 13px; opacity: .82; margin-bottom: 4px; }
+.hero-name { font-size: 24px; font-weight: 800; margin-bottom: 6px; }
+.hero-sub { font-size: 13px; opacity: .78; }
+.hero-emoji {
+  position: absolute; right: 32px; top: 50%; transform: translateY(-50%);
+  font-size: 68px; opacity: .12; pointer-events: none;
+}
+
+.stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 24px; }
+.scard {
+  background: var(--wh); border-radius: var(--r-md);
+  padding: 18px; border: 1px solid var(--g2);
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--sh-sm); animation: slideUp .4s ease both;
+}
+.scard:nth-child(2){animation-delay:.06s}
+.scard:nth-child(3){animation-delay:.12s}
+.sicon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+}
+.sicon.pk { background: var(--pk1); }
+.sicon.bl { background: var(--bl1); }
+.sicon.gn { background: #f0fdf4; }
+.snum { font-size: 22px; font-weight: 800; color: var(--g8); }
+.slabel { font-size: 12px; color: var(--g5); margin-top: 2px; }
+
+.sec-head {
+  font-size: 17px; font-weight: 700; color: var(--g8);
+  margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+}
+
+/* Unit cards */
+.unit-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 18px; margin-bottom: 24px; }
+.ucard {
+  background: var(--wh); border-radius: var(--r-lg);
+  border: 1.5px solid var(--g2); padding: 26px;
+  cursor: pointer; transition: all .25s;
+  position: relative; overflow: hidden;
+  box-shadow: var(--sh-sm);
+  animation: slideUp .4s ease both;
+}
+.ucard:nth-child(2){animation-delay:.08s}
+.ucard:hover { transform: translateY(-5px); box-shadow: var(--sh-lg); }
+.ucard.pk-card { border-top: 4px solid var(--pk4); }
+.ucard.bl-card { border-top: 4px solid var(--bl5); }
+.ucard:hover.pk-card { border-color: var(--pk5); box-shadow: var(--sh-pk); }
+.ucard:hover.bl-card { border-color: var(--bl5); box-shadow: var(--sh-bl); }
+
+.uicon {
+  width: 54px; height: 54px; border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin-bottom: 14px;
+}
+.pk-card .uicon { background: var(--pk1); }
+.bl-card .uicon { background: var(--bl1); }
+
+.utitle { font-size: 16px; font-weight: 700; color: var(--g8); margin-bottom: 3px; }
+.usub { font-size: 13px; color: var(--g5); margin-bottom: 16px; }
+
+.pbar-wrap { background: var(--g1); border-radius: 99px; height: 7px; margin-bottom: 7px; overflow: hidden; }
+.pbar-fill { height: 100%; border-radius: 99px; transition: width .7s cubic-bezier(.4,0,.2,1); }
+.pk-fill { background: linear-gradient(90deg, var(--pk5), var(--pk3)); }
+.bl-fill { background: linear-gradient(90deg, var(--bl6), var(--bl3)); }
+.plabel { font-size: 12px; color: var(--g5); display: flex; justify-content: space-between; }
+
+.pills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.pill {
+  padding: 3px 10px; border-radius: 99px;
+  font-size: 11px; font-weight: 500; cursor: pointer; transition: all .2s;
+}
+.pill.done { background: var(--pk2); color: var(--pk6); }
+.pill.todo { background: var(--g1); color: var(--g5); }
+.pill:hover { transform: scale(1.05); }
+
+/* Satisfaction card */
+.sat-cta {
+  background: var(--wh); border-radius: var(--r-lg);
+  border: 1.5px solid var(--pk3); padding: 20px 24px;
+  cursor: pointer; transition: all .25s;
+  display: flex; align-items: center; gap: 16px;
+  box-shadow: var(--sh-sm);
+}
+.sat-cta:hover { transform: translateY(-3px); box-shadow: var(--sh-pk); }
+.sat-icon { font-size: 36px; }
+.sat-arrow { margin-left: auto; font-size: 22px; color: var(--g3); }
+
+/* Teacher intro link */
+.teacher-cta {
+  background: var(--wh); border-radius: var(--r-md);
+  border: 1.5px solid var(--bl3); padding: 16px 20px;
+  cursor: pointer; transition: all .25s;
+  display: flex; align-items: center; gap: 14px;
+  box-shadow: var(--sh-sm); margin-top: 12px;
+}
+.teacher-cta:hover { transform: translateY(-3px); box-shadow: var(--sh-bl); }
+
+/* ===== UNIT PAGE ===== */
+.page-hdr {
+  background: var(--wh); border-bottom: 1px solid var(--g2);
+  padding: 18px 24px; box-shadow: var(--sh-sm);
+}
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--g5); margin-bottom: 6px; }
+.breadcrumb a { color: var(--pk5); cursor: pointer; text-decoration: none; }
+.breadcrumb a:hover { text-decoration: underline; }
+.page-title { font-size: 20px; font-weight: 800; color: var(--g8); }
+
+.lgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 14px; padding: 22px 20px; max-width: 1100px; margin: 0 auto; }
+.lcard {
+  background: var(--wh); border-radius: var(--r-md);
+  border: 1.5px solid var(--g2); padding: 18px;
+  display: flex; gap: 14px; cursor: pointer;
+  transition: all .25s; animation: slideUp .35s ease both;
+}
+.lcard:hover { border-color: var(--pk3); box-shadow: var(--sh-md); transform: translateY(-3px); }
+.lcard.done { background: var(--pk1); border-color: var(--pk2); }
+.lnum {
+  width: 40px; height: 40px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.lnum.pk { background: var(--pk2); color: var(--pk6); }
+.lnum.bl { background: var(--bl2); color: var(--bl6); }
+.lnum.dn { background: var(--pk5); color: var(--wh); }
+.linfo {}
+.ltitle { font-size: 14px; font-weight: 700; color: var(--g8); margin-bottom: 4px; }
+.lmeta { font-size: 12px; color: var(--g5); }
+.badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 99px;
+  font-size: 11px; font-weight: 500; margin-top: 7px; margin-right: 4px;
+}
+.badge-done { background: var(--pk2); color: var(--pk6); }
+.badge-todo { background: var(--g1); color: var(--g5); }
+.badge-home { background: var(--bl1); color: var(--bl6); }
+.badge-class { background: #f0fdf4; color: #15803d; }
+
+/* ===== LESSON PAGE ===== */
+.lesson-layout { max-width: 980px; margin: 0 auto; padding: 22px 20px; display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+.lesson-main {}
+.lesson-side {}
+
+/* Video */
+.video-box {
+  background: #0d0d1a; border-radius: var(--r-md);
+  overflow: hidden; aspect-ratio: 16/9; margin-bottom: 18px; position: relative;
+}
+.video-ph {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  color: rgba(255,255,255,.65);
+}
+.vplay-btn {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pk5), var(--bl5));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; cursor: pointer; transition: transform .2s;
+  box-shadow: var(--sh-pk);
+}
+.vplay-btn:hover { transform: scale(1.1); }
+.vframe { width: 100%; height: 100%; border: none; display: none; }
+.vframe.on { display: block; }
+
+/* Content cards */
+.lccard {
+  background: var(--wh); border-radius: var(--r-md);
+  border: 1px solid var(--g2); overflow: hidden; margin-bottom: 16px;
+  box-shadow: var(--sh-sm);
+}
+.lccard-hdr {
+  padding: 14px 18px; border-bottom: 1px solid var(--g1);
+  font-weight: 700; font-size: 14px; color: var(--g8);
+  display: flex; align-items: center; gap: 8px;
+  background: linear-gradient(135deg, var(--pk1), var(--bl1));
+}
+.lccard-body { padding: 18px; }
+
+.sum-list { list-style: none; }
+.sum-list li {
+  padding: 7px 0; border-bottom: 1px solid var(--g0);
+  display: flex; gap: 10px; font-size: 14px; color: var(--g7);
+}
+.sum-list li:last-child { border-bottom: none; }
+.sdot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 7px;
+  background: linear-gradient(135deg, var(--pk4), var(--bl4));
+}
+
+/* Quiz */
+.quiz-q { font-size: 14px; font-weight: 600; color: var(--g8); margin-bottom: 10px; }
+.quiz-opts { display: flex; flex-direction: column; gap: 7px; margin-bottom: 8px; }
+.quiz-opt {
+  padding: 9px 14px; border: 1.5px solid var(--g2);
+  border-radius: var(--r-sm); cursor: pointer; font-size: 14px;
+  color: var(--g7); transition: all .2s; font-family: inherit;
+  background: var(--wh); text-align: left;
+}
+.quiz-opt:hover:not(:disabled) { border-color: var(--pk3); background: var(--pk1); }
+.quiz-opt.correct { border-color: var(--green); background: #f0fdf4; color: #065f46; }
+.quiz-opt.wrong { border-color: var(--red); background: #fef2f2; color: #991b1b; }
+.quiz-fb {
+  margin-top: 8px; padding: 9px 12px; border-radius: var(--r-sm);
+  font-size: 13px; display: none;
+}
+.quiz-fb.show { display: block; }
+.quiz-fb.ok { background: #f0fdf4; color: #065f46; }
+.quiz-fb.no { background: #fef2f2; color: #991b1b; }
+.quiz-sep { border: none; border-top: 1px solid var(--g1); margin: 16px 0; }
+
+/* Assignment */
+.assign-box {
+  background: var(--wh); border-radius: var(--r-md);
+  border: 1.5px solid var(--pk3); overflow: hidden; box-shadow: var(--sh-sm);
+}
+.assign-hdr {
+  background: linear-gradient(135deg, var(--pk1), var(--bl1));
+  padding: 14px 18px; border-bottom: 1px solid var(--pk2);
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.assign-title { font-weight: 700; font-size: 15px; color: var(--g8); margin-bottom: 4px; }
+.assign-body { padding: 18px; }
+.assign-desc { font-size: 14px; color: var(--g6); margin-bottom: 14px; line-height: 1.8; }
+.steps { background: var(--g0); border-radius: var(--r-sm); padding: 14px; margin-bottom: 16px; }
+.step { display: flex; gap: 10px; font-size: 13px; color: var(--g7); padding: 5px 0; }
+.step-n {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--pk5), var(--bl5));
+  color: var(--wh); display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; flex-shrink: 0;
+}
+.txtarea {
+  width: 100%; padding: 11px 13px; min-height: 96px;
+  border: 1.5px solid var(--g2); border-radius: var(--r-sm);
+  font-family: inherit; font-size: 14px; resize: vertical; outline: none; transition: all .2s;
+}
+.txtarea:focus { border-color: var(--pk4); box-shadow: 0 0 0 3px rgba(236,72,153,.08); }
+.upload-area {
+  border: 2px dashed var(--pk3); border-radius: var(--r-sm);
+  padding: 22px; text-align: center; cursor: pointer;
+  background: var(--pk1); transition: all .2s; margin: 12px 0;
+}
+.upload-area:hover { border-color: var(--pk5); background: var(--pk2); }
+.uico { font-size: 26px; margin-bottom: 6px; }
+.utxt { font-size: 13px; color: var(--g6); }
+.btn-submit {
+  width: 100%; padding: 12px; background: linear-gradient(135deg, var(--pk5), var(--bl6));
+  border: none; border-radius: var(--r-sm);
+  font-family: inherit; font-size: 14px; font-weight: 700;
+  color: var(--wh); cursor: pointer; transition: all .25s; margin-top: 10px;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: var(--sh-pk); }
+
+/* Sidebar */
+.scrd {
+  background: var(--wh); border-radius: var(--r-md);
+  border: 1px solid var(--g2); overflow: hidden; margin-bottom: 14px; box-shadow: var(--sh-sm);
+}
+.scrd-hdr {
+  padding: 12px 16px; border-bottom: 1px solid var(--g1);
+  font-weight: 700; font-size: 13px; color: var(--g8);
+  background: linear-gradient(135deg, var(--pk1), var(--bl1));
+}
+.scrd-body { padding: 14px; }
+.lnav-item {
+  display: flex; align-items: center; gap: 9px; padding: 7px 9px;
+  border-radius: 8px; cursor: pointer; transition: all .2s;
+  font-size: 13px; color: var(--g6); margin-bottom: 3px;
+}
+.lnav-item:hover { background: var(--g0); color: var(--g8); }
+.lnav-item.cur { background: var(--pk1); color: var(--pk6); font-weight: 600; }
+.ndot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.ndot.done { background: var(--pk5); }
+.ndot.cur { background: var(--bl5); }
+.ndot.todo { background: var(--g3); }
+
+/* ===== SATISFACTION ===== */
+.sat-wrap { max-width: 680px; margin: 0 auto; padding: 28px 20px; }
+.sat-hdr { text-align: center; margin-bottom: 28px; animation: slideUp .4s ease; }
+.sat-icon-big {
+  width: 78px; height: 78px; border-radius: 22px; margin: 0 auto 14px;
+  background: linear-gradient(135deg, var(--pk5), var(--bl5));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 34px; box-shadow: var(--sh-pk);
+}
+.sat-title { font-size: 20px; font-weight: 800; color: var(--g8); margin-bottom: 6px; }
+.sat-desc { font-size: 13px; color: var(--g5); line-height: 1.7; }
+
+.sat-form {
+  background: var(--wh); border-radius: var(--r-lg);
+  padding: 28px; box-shadow: var(--sh-md); border: 1px solid var(--g2);
+  animation: slideUp .4s .05s ease both;
+}
+.sat-item { margin-bottom: 26px; padding-bottom: 22px; border-bottom: 1px solid var(--g1); }
+.sat-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.sat-q { font-size: 14px; font-weight: 600; color: var(--g8); margin-bottom: 12px; }
+.rating-row { display: flex; gap: 7px; }
+.rbtn {
+  flex: 1; padding: 10px 4px; border: 1.5px solid var(--g2);
+  border-radius: 10px; background: var(--wh); cursor: pointer; transition: all .2s;
+  text-align: center; font-family: inherit;
+}
+.rbtn .rn { font-size: 15px; font-weight: 800; color: var(--g4); display: block; }
+.rbtn .rl { font-size: 10px; color: var(--g4); display: block; margin-top: 2px; }
+.rbtn:hover,.rbtn.on { border-color: var(--pk4); background: var(--pk1); }
+.rbtn.on .rn { color: var(--pk6); }
+.rbtn.on .rl { color: var(--pk5); }
+.scale-lbl { display: flex; justify-content: space-between; font-size: 11px; color: var(--g4); margin-top: 5px; }
+
+.btn-sat {
+  display: block; width: 100%; max-width: 300px; margin: 20px auto 0;
+  padding: 13px; background: linear-gradient(135deg, var(--pk5), var(--bl6));
+  border: none; border-radius: var(--r-sm);
+  font-family: inherit; font-size: 15px; font-weight: 700;
+  color: var(--wh); cursor: pointer; transition: all .25s;
+  box-shadow: var(--sh-pk);
+}
+.btn-sat:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(236,72,153,.35); }
+
+/* ===== TEACHER PANEL ===== */
+.teacher-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px; }
+.teacher-tabs {
+  display: flex; gap: 4px; background: var(--g1);
+  border-radius: 12px; padding: 4px; margin-bottom: 22px; width: fit-content;
+}
+.ttab {
+  padding: 8px 18px; border: none; background: transparent;
+  border-radius: 9px; font-family: inherit; font-size: 13px; font-weight: 500;
+  color: var(--g5); cursor: pointer; transition: all .2s;
+}
+.ttab.on { background: var(--wh); color: var(--g8); box-shadow: var(--sh-sm); }
+
+.tsec { display: none; }
+.tsec.on { display: block; }
+
+/* Efficiency banner */
+.eff-banner {
+  border-radius: var(--r-md); padding: 22px 24px;
+  background: linear-gradient(135deg, var(--pk5), var(--bl6));
+  color: var(--wh); margin-bottom: 20px;
+  display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr; gap: 20px; align-items: center;
+}
+.eff-div { background: rgba(255,255,255,.2); height: 100%; }
+.eff-item { text-align: center; }
+.eff-n { font-size: 30px; font-weight: 800; }
+.eff-l { font-size: 12px; opacity: .82; margin-top: 4px; }
+
+/* Tables */
+.tbl-wrap { background: var(--wh); border-radius: var(--r-md); overflow: auto; box-shadow: var(--sh-sm); border: 1px solid var(--g2); }
+.dtbl { width: 100%; border-collapse: separate; border-spacing: 0; }
+.dtbl th { padding: 11px 14px; background: var(--g0); font-size: 12px; font-weight: 700; color: var(--g6); text-align: left; border-bottom: 1px solid var(--g2); white-space: nowrap; }
+.dtbl td { padding: 11px 14px; font-size: 13px; color: var(--g7); border-bottom: 1px solid var(--g0); white-space: nowrap; }
+.dtbl tr:last-child td { border-bottom: none; }
+.dtbl tr:hover td { background: var(--g0); }
+
+.stag {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 600;
+}
+.stag.ok { background: var(--pk2); color: var(--pk6); }
+.stag.no { background: var(--g1); color: var(--g5); }
+.stag.pt { background: var(--bl1); color: var(--bl6); }
+
+/* Rubric input */
+.rinput {
+  width: 44px; padding: 4px; text-align: center;
+  border: 1px solid var(--g2); border-radius: 6px;
+  font-family: inherit; font-size: 13px; outline: none;
+}
+.rinput:focus { border-color: var(--pk4); }
+
+.rscore {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 26px; height: 26px; border-radius: 7px;
+  font-size: 12px; font-weight: 700;
+}
+.rs4 { background: #dcfce7; color: #15803d; }
+.rs3 { background: var(--bl1); color: var(--bl6); }
+.rs2 { background: #fef9c3; color: #a16207; }
+.rs1 { background: #fee2e2; color: #dc2626; }
+
+/* Toolbar */
+.tbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+.tbar-l { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.btn-2nd {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: 1.5px solid var(--g2);
+  border-radius: var(--r-sm); background: var(--wh);
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  color: var(--g7); cursor: pointer; transition: all .2s;
+}
+.btn-2nd:hover { border-color: var(--pk3); color: var(--pk6); }
+.btn-exp {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 16px; border: none;
+  border-radius: var(--r-sm);
+  background: linear-gradient(135deg, var(--pk5), var(--bl6));
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--wh); cursor: pointer; transition: all .2s;
+}
+.btn-exp:hover { transform: translateY(-1px); box-shadow: var(--sh-pk); }
+
+.filt-btn {
+  padding: 6px 14px; border: 1.5px solid var(--g2);
+  border-radius: 99px; background: var(--wh);
+  font-family: inherit; font-size: 13px; color: var(--g6);
+  cursor: pointer; transition: all .2s;
+}
+.filt-btn.on { border-color: var(--pk4); background: var(--pk1); color: var(--pk6); }
+
+/* Manage form */
+.mform {
+  display: none; background: var(--wh); border-radius: var(--r-md);
+  padding: 22px; box-shadow: var(--sh-sm); border: 1px solid var(--g2); margin-bottom: 18px;
+}
+.mform.open { display: block; }
+.mform-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(180px,1fr)); gap: 12px; }
+
+/* ===== TEACHER INTRO ===== */
+.ti-wrap { max-width: 780px; margin: 0 auto; padding: 28px 20px; }
+.ti-card {
+  background: var(--wh); border-radius: var(--r-xl);
+  overflow: hidden; box-shadow: var(--sh-lg); border: 1px solid var(--g2);
+  animation: slideUp .4s ease;
+}
+.ti-cover {
+  height: 160px;
+  background: linear-gradient(135deg, var(--pk4), var(--bl6));
+  position: relative;
+}
+.ti-cover::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(255,255,255,.12) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,.08) 0%, transparent 40%);
+}
+.ti-av-wrap { position: absolute; bottom: -38px; left: 30px; }
+.ti-av {
+  width: 76px; height: 76px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--pk3), var(--bl4));
+  border: 4px solid var(--wh); display: flex; align-items: center;
+  justify-content: center; font-size: 30px; box-shadow: var(--sh-md);
+}
+.ti-body { padding: 54px 30px 30px; }
+.ti-name { font-size: 22px; font-weight: 800; color: var(--g8); margin-bottom: 3px; }
+.ti-role { font-size: 13px; color: var(--g5); margin-bottom: 18px; }
+.ti-metas { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+.ti-meta {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--g6);
+  background: var(--g0); padding: 5px 12px; border-radius: 99px;
+}
+.ti-desc { font-size: 14px; color: var(--g6); line-height: 1.9; margin-bottom: 22px; }
+.ti-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; }
+.ti-gitem {
+  background: linear-gradient(135deg, var(--pk1), var(--bl1));
+  border-radius: var(--r-sm); padding: 13px 14px;
+}
+.ti-gl { font-size: 11px; color: var(--g5); margin-bottom: 3px; }
+.ti-gv { font-size: 13px; font-weight: 700; color: var(--g8); }
+
+/* ===== TOAST ===== */
+.toast {
+  position: fixed; bottom: 22px; right: 22px;
+  padding: 11px 18px; border-radius: 12px;
+  font-size: 14px; color: var(--wh);
+  background: var(--g8); box-shadow: var(--sh-lg);
+  z-index: 9999; transform: translateY(80px); opacity: 0; transition: all .3s;
+  display: flex; align-items: center; gap: 8px; max-width: 360px;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok { background: linear-gradient(135deg, var(--green), #059669); }
+.toast.err { background: linear-gradient(135deg, var(--red), #dc2626); }
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .stats { grid-template-columns: 1fr; }
+  .unit-grid { grid-template-columns: 1fr; }
+  .lesson-layout { grid-template-columns: 1fr; }
+  .lesson-side { display: none; }
+  .eff-banner { grid-template-columns: 1fr; }
+  .eff-div { display: none; }
+  .ti-grid { grid-template-columns: 1fr; }
+  .hero-emoji { display: none; }
+  .login-card { padding: 32px 22px; }
+  .teacher-tabs { flex-wrap: wrap; }
+}
+
+/* Scroll to top smooth */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--g1); }
+::-webkit-scrollbar-thumb { background: var(--pk3); border-radius: 99px; }
+</style>
+</head>
+<body>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ================================================================
+     PAGE: LOGIN
+================================================================ -->
+<div class="page active" id="page-login">
+  <div class="login-blob lb1"></div>
+  <div class="login-blob lb2"></div>
+  <div class="login-blob lb3"></div>
+  <div class="login-card">
+    <div class="login-top">
+      <div class="login-icon-wrap">💻</div>
+      <div class="login-title">บทเรียนออนไลน์<br>วิทยาการคำนวณ ป.4</div>
+      <div class="login-school">🏫 โรงเรียนกลับเพชรศึกษา</div>
+    </div>
+    <div class="tab-row">
+      <button class="tab-btn on" onclick="switchTab('student',this)">🎒 นักเรียน</button>
+      <button class="tab-btn" onclick="switchTab('teacher',this)">👩‍🏫 ครู</button>
+    </div>
+
+    <!-- Student form -->
+    <div id="frm-student">
+      <div class="fgroup">
+        <label class="flabel">ชื่อผู้ใช้ (Username)</label>
+        <input class="finput" id="su" placeholder="เช่น 401001" onkeydown="if(event.key==='Enter')loginSt()" />
+      </div>
+      <div class="fgroup">
+        <label class="flabel">รหัสผ่าน</label>
+        <input class="finput" id="sp" type="password" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter')loginSt()" />
+      </div>
+      <div class="fgroup">
+        <label class="flabel">ห้องเรียน</label>
+        <select class="fselect" id="sr">
+          <option value="4/1">ชั้น ป.4/1</option>
+          <option value="4/2">ชั้น ป.4/2</option>
+        </select>
+      </div>
+      <button class="btn-main" onclick="loginSt()">เข้าสู่ระบบ →</button>
+      <div class="login-hint">💡 ติดต่อครูเพื่อรับ username และรหัสผ่าน</div>
+    </div>
+
+    <!-- Teacher form -->
+    <div id="frm-teacher" style="display:none">
+      <div class="fgroup">
+        <label class="flabel">Username ครู</label>
+        <input class="finput" id="tu" placeholder="teacher" onkeydown="if(event.key==='Enter')loginTe()" />
+      </div>
+      <div class="fgroup">
+        <label class="flabel">รหัสผ่าน</label>
+        <input class="finput" id="tp" type="password" placeholder="รหัสผ่าน" onkeydown="if(event.key==='Enter')loginTe()" />
+      </div>
+      <button class="btn-main" onclick="loginTe()">เข้าระบบครู →</button>
+      <div class="login-hint">💡 username: teacher / password: 1234 (ทดสอบ)</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE: DASHBOARD
+================================================================ -->
+<div class="page" id="page-dashboard">
+  <nav class="navbar">
+    <div class="nav-brand" onclick="goTo('dashboard')">
+      <div class="nav-logo">💻</div><span>วิทยาการคำนวณ ป.4</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user">
+        <div class="nav-avatar" id="av1">ก</div>
+        <span id="nn1">นักเรียน</span>
+      </div>
+      <button class="btn-out" onclick="logout()">ออกจากระบบ</button>
+    </div>
+  </nav>
+  <div class="wrap">
+    <div class="hero">
+      <div class="hero-greet">ยินดีต้อนรับกลับมา 👋</div>
+      <div class="hero-name" id="dname">นักเรียน</div>
+      <div class="hero-sub" id="droom">ห้อง 4/1 • ภาคเรียนที่ 1 ปีการศึกษา 2569</div>
+      <div class="hero-emoji">🖥️</div>
+    </div>
+
+    <div class="stats">
+      <div class="scard"><div class="sicon pk">📚</div><div><div class="snum" id="sw">0/10</div><div class="slabel">บทเรียนที่ดูแล้ว</div></div></div>
+      <div class="scard"><div class="sicon bl">✅</div><div><div class="snum" id="ss">0/10</div><div class="slabel">ชิ้นงานที่ส่งแล้ว</div></div></div>
+      <div class="scard"><div class="sicon gn">⭐</div><div><div class="snum" id="savg">-</div><div class="slabel">คะแนนเฉลี่ย Rubric</div></div></div>
+    </div>
+
+    <div class="sec-head">📖 หน่วยการเรียน</div>
+    <div class="unit-grid">
+      <div class="ucard pk-card" onclick="openUnit(1)">
+        <div class="uicon">🐱</div>
+        <div class="utitle">หน่วยที่ 1</div>
+        <div class="usub">การเขียนโปรแกรมด้วย Scratch</div>
+        <div class="pbar-wrap"><div class="pbar-fill pk-fill" id="pb1" style="width:0%"></div></div>
+        <div class="plabel"><span id="pt1">0 / 5 บทเรียน</span><span id="pp1">0%</span></div>
+        <div class="pills" id="pills1"></div>
+      </div>
+      <div class="ucard bl-card" onclick="openUnit(2)">
+        <div class="uicon">🤖</div>
+        <div class="utitle">หน่วยที่ 2</div>
+        <div class="usub">การประยุกต์ใช้กับหุ่นยนต์ mBot</div>
+        <div class="pbar-wrap"><div class="pbar-fill bl-fill" id="pb2" style="width:0%"></div></div>
+        <div class="plabel"><span id="pt2">0 / 5 บทเรียน</span><span id="pp2">0%</span></div>
+        <div class="pills" id="pills2"></div>
+      </div>
+    </div>
+
+    <div class="sec-head">📝 แบบประเมินและข้อมูล</div>
+    <div class="sat-cta" onclick="goTo('satisfaction')">
+      <div class="sat-icon">😊</div>
+      <div>
+        <div style="font-weight:700;font-size:15px;color:var(--g8)">แบบประเมินความพึงพอใจ</div>
+        <div style="font-size:13px;color:var(--g5);margin-top:2px">ทำหลังเรียนครบทุกบทเรียน • 10 ข้อ • มาตราส่วน 5 ระดับ</div>
+      </div>
+      <div class="sat-arrow">→</div>
+    </div>
+    <div class="teacher-cta" onclick="goTo('teacher-intro')">
+      <div style="font-size:28px">👨‍🏫</div>
+      <div>
+        <div style="font-weight:700;font-size:14px;color:var(--g8)">แนะนำครูผู้สอน</div>
+        <div style="font-size:13px;color:var(--g5);margin-top:2px">นาย ฮาฟิส ตำภู • มหาวิทยาลัยทักษิณ</div>
+      </div>
+      <div class="sat-arrow" style="color:var(--bl3)">→</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE: UNIT
+================================================================ -->
+<div class="page" id="page-unit">
+  <nav class="navbar">
+    <div class="nav-brand" onclick="goTo('dashboard')">
+      <div class="nav-logo">💻</div><span>วิทยาการคำนวณ ป.4</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user"><div class="nav-avatar" id="av2">ก</div><span id="nn2">นักเรียน</span></div>
+      <button class="btn-out" onclick="logout()">ออกจากระบบ</button>
+    </div>
+  </nav>
+  <div class="page-hdr">
+    <div class="breadcrumb">
+      <a onclick="goTo('dashboard')">🏠 หน้าหลัก</a>
+      <span>›</span><span id="ubc">หน่วยที่ 1</span>
+    </div>
+    <div class="page-title" id="utitle">การเขียนโปรแกรมด้วย Scratch</div>
+  </div>
+  <div class="lgrid" id="lgrid"></div>
+</div>
+
+<!-- ================================================================
+     PAGE: LESSON
+================================================================ -->
+<div class="page" id="page-lesson">
+  <nav class="navbar">
+    <div class="nav-brand" onclick="backFromLesson()">
+      <div class="nav-logo">💻</div><span>วิทยาการคำนวณ ป.4</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user"><div class="nav-avatar" id="av3">ก</div><span id="nn3">นักเรียน</span></div>
+      <button class="btn-out" onclick="logout()">ออกจากระบบ</button>
+    </div>
+  </nav>
+  <div class="page-hdr">
+    <div class="breadcrumb">
+      <a onclick="goTo('dashboard')">🏠 หน้าหลัก</a>
+      <span>›</span><a onclick="backFromLesson()" id="lbc1">หน่วยที่ 1</a>
+      <span>›</span><span id="lbc2">บทเรียน</span>
+    </div>
+    <div class="page-title" id="lpTitle">ชื่อบทเรียน</div>
+  </div>
+
+  <div class="lesson-layout">
+    <div class="lesson-main">
+      <!-- Video -->
+      <div class="video-box">
+        <div class="video-ph" id="vph">
+          <div class="vplay-btn" onclick="playVideo()">▶</div>
+          <div style="font-size:14px">คลิกเพื่อเล่นวิดีโอบทเรียน</div>
+          <div style="font-size:12px;opacity:.6" id="vdur">⏱ ประมาณ 5 นาที</div>
+        </div>
+        <iframe class="vframe" id="vframe" allowfullscreen></iframe>
+      </div>
+
+      <!-- Summary -->
+      <div class="lccard">
+        <div class="lccard-hdr">📋 สรุปเนื้อหาสำคัญ</div>
+        <div class="lccard-body"><ul class="sum-list" id="lsummary"></ul></div>
+      </div>
+
+      <!-- Quiz -->
+      <div class="lccard">
+        <div class="lccard-hdr">❓ ทบทวนความเข้าใจ (Quick Quiz)</div>
+        <div class="lccard-body" id="lquiz"></div>
+      </div>
+
+      <!-- Assignment -->
+      <div class="assign-box">
+        <div class="assign-hdr">
+          <span style="font-size:22px">🛠️</span>
+          <div>
+            <div class="assign-title" id="atitle">โจทย์ปฏิบัติ</div>
+            <div style="margin-top:5px">
+              <span class="badge badge-home">🏠 เรียนที่บ้าน</span>
+              <span class="badge badge-class">🏫 ปฏิบัติในห้อง</span>
+            </div>
+          </div>
+        </div>
+        <div class="assign-body">
+          <div class="assign-desc" id="adesc"></div>
+          <div class="steps" id="asteps"></div>
+          <label class="flabel">📝 พิมพ์คำตอบหรืออธิบายสิ่งที่ทำ</label>
+          <textarea class="txtarea" id="aanswer" placeholder="พิมพ์คำตอบ / อธิบายขั้นตอน / ผลลัพธ์ที่ได้..."></textarea>
+          <div class="upload-area" onclick="document.getElementById('fup').click()">
+            <div class="uico">📷</div>
+            <div class="utxt">คลิกเพื่ออัปโหลดรูปภาพผลงาน<br><span style="font-size:11px;color:var(--g4)">PNG, JPG ไม่เกิน 10MB</span></div>
+            <input type="file" id="fup" accept="image/*" style="display:none" onchange="prevFile(this)" />
+          </div>
+          <div id="prevBox" style="display:none;margin-bottom:10px">
+            <img id="prevImg" style="max-width:100%;border-radius:8px;border:1px solid var(--g2)" />
+          </div>
+          <button class="btn-submit" onclick="submitWork()">✅ ส่งชิ้นงาน</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="lesson-side">
+      <div class="scrd">
+        <div class="scrd-hdr">📚 บทเรียนในหน่วยนี้</div>
+        <div class="scrd-body" id="lnav"></div>
+      </div>
+      <div class="scrd">
+        <div class="scrd-hdr">📊 ความคืบหน้า</div>
+        <div class="scrd-body">
+          <div class="pbar-wrap" style="margin-bottom:7px">
+            <div class="pbar-fill pk-fill" id="lpbar" style="width:0%"></div>
+          </div>
+          <div style="font-size:13px;color:var(--g5)" id="lptext">0 / 5 บทเรียน</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE: SATISFACTION
+================================================================ -->
+<div class="page" id="page-satisfaction">
+  <nav class="navbar">
+    <div class="nav-brand" onclick="goTo('dashboard')">
+      <div class="nav-logo">💻</div><span>วิทยาการคำนวณ ป.4</span>
+    </div>
+    <div class="nav-right"><button class="btn-out" onclick="logout()">ออกจากระบบ</button></div>
+  </nav>
+  <div class="sat-wrap">
+    <div class="sat-hdr">
+      <div class="sat-icon-big">😊</div>
+      <div class="sat-title">แบบประเมินความพึงพอใจ</div>
+      <div class="sat-desc">
+        บทเรียนไมโครเลิร์นนิงร่วมกับการจัดการเรียนรู้แบบผสมผสาน<br>
+        รายวิชาวิทยาการคำนวณ ชั้นประถมศึกษาปีที่ 4
+      </div>
+    </div>
+    <div class="sat-form" id="satForm"></div>
+    <button class="btn-sat" onclick="submitSat()">✅ ส่งแบบประเมิน</button>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE: TEACHER PANEL
+================================================================ -->
+<div class="page" id="page-teacher">
+  <nav class="navbar">
+    <div class="nav-brand">
+      <div class="nav-logo">👩‍🏫</div><span>Teacher Panel</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user">
+        <div class="nav-avatar" style="background:linear-gradient(135deg,var(--bl4),var(--pk4))">ค</div>
+        <span>ครูผู้สอน</span>
+      </div>
+      <button class="btn-out" onclick="logout()">ออกจากระบบ</button>
+    </div>
+  </nav>
+  <div class="teacher-wrap">
+    <div class="teacher-tabs">
+      <button class="ttab on" onclick="openTTab('ov',this)">📊 ภาพรวม</button>
+      <button class="ttab" onclick="openTTab('stu',this)">👥 นักเรียน</button>
+      <button class="ttab" onclick="openTTab('rub',this)">📝 Rubric</button>
+      <button class="ttab" onclick="openTTab('eff',this)">📈 E1/E2</button>
+      <button class="ttab" onclick="openTTab('mgr',this)">⚙️ จัดการบัญชี</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="tsec on" id="ts-ov">
+      <div class="eff-banner">
+        <div class="eff-item"><div class="eff-n" id="bE1">—</div><div class="eff-l">E1 ประสิทธิภาพกระบวนการ</div></div>
+        <div class="eff-div"></div>
+        <div class="eff-item"><div class="eff-n" id="bE2">—</div><div class="eff-l">E2 ประสิทธิภาพผลลัพธ์</div></div>
+        <div class="eff-div"></div>
+        <div class="eff-item"><div class="eff-n" id="bPass">—</div><div class="eff-l">ผ่านเกณฑ์ 80%</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px">
+        <div class="scard"><div class="sicon pk">👥</div><div><div class="snum" id="ovTotal">0</div><div class="slabel">นักเรียนทั้งหมด</div></div></div>
+        <div class="scard"><div class="sicon bl">📹</div><div><div class="snum" id="ovWatch">0</div><div class="slabel">ดูวิดีโอแล้ว (คน)</div></div></div>
+        <div class="scard"><div class="sicon gn">✅</div><div><div class="snum" id="ovSub">0</div><div class="slabel">ส่งงานครบแล้ว (คน)</div></div></div>
+        <div class="scard"><div class="sicon pk">😊</div><div><div class="snum" id="ovSat">—</div><div class="slabel">ความพึงพอใจเฉลี่ย</div></div></div>
+      </div>
+    </div>
+
+    <!-- STUDENTS -->
+    <div class="tsec" id="ts-stu">
+      <div class="tbar">
+        <div class="tbar-l">
+          <button class="filt-btn on" onclick="fRoom(this,'all')">ทั้งหมด</button>
+          <button class="filt-btn" onclick="fRoom(this,'4/1')">ห้อง 4/1</button>
+          <button class="filt-btn" onclick="fRoom(this,'4/2')">ห้อง 4/2</button>
+        </div>
+        <button class="btn-exp" onclick="doExport()">⬇️ Export CSV</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="dtbl">
+          <thead>
+            <tr>
+              <th>ชื่อ-นามสกุล</th><th>ห้อง</th>
+              <th>ดูวิดีโอ</th><th>ส่งงาน</th>
+              <th>คะแนนเฉลี่ย</th><th>ความพึงพอใจ</th>
+              <th>เข้าเรียนล่าสุด</th><th>สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="stuBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RUBRIC -->
+    <div class="tsec" id="ts-rub">
+      <div class="tbar">
+        <div style="font-size:13px;color:var(--g5)">ให้คะแนน 1–4 (4=ดีมาก, 3=ดี, 2=พอใช้, 1=ปรับปรุง)</div>
+        <div style="display:flex;gap:8px">
+          <select class="fselect" style="width:auto" id="rubRoom" onchange="renderRub()">
+            <option value="4/1">ห้อง 4/1</option>
+            <option value="4/2">ห้อง 4/2</option>
+          </select>
+          <button class="btn-exp" onclick="saveRub()">💾 บันทึก</button>
+        </div>
+      </div>
+      <div class="tbl-wrap" style="overflow:auto">
+        <table class="dtbl">
+          <thead>
+            <tr>
+              <th>ชื่อ</th>
+              <th>เรื่อง 1</th><th>เรื่อง 2</th><th>เรื่อง 3</th><th>เรื่อง 4</th><th>เรื่อง 5</th>
+              <th>เรื่อง 6</th><th>เรื่อง 7</th><th>เรื่อง 8</th><th>เรื่อง 9</th><th>เรื่อง 10</th>
+              <th>รวม</th><th>%</th>
+            </tr>
+          </thead>
+          <tbody id="rubBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- EFFICIENCY -->
+    <div class="tsec" id="ts-eff">
+      <div style="background:var(--wh);border-radius:var(--r-md);padding:24px;box-shadow:var(--sh-sm);border:1px solid var(--g2);margin-bottom:18px">
+        <div style="font-size:15px;font-weight:700;color:var(--g8);margin-bottom:16px">สูตรคำนวณประสิทธิภาพ (ชัยยงค์ พรหมวงศ์, 2556)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div style="background:var(--pk1);border-radius:12px;padding:16px">
+            <div style="font-size:13px;font-weight:700;color:var(--pk6);margin-bottom:8px">E1 — ประสิทธิภาพกระบวนการ</div>
+            <div style="font-size:12px;color:var(--g6);line-height:1.9">E1 = (Σคะแนน Rubric ทุกชิ้นงาน / คะแนนเต็มรวม) × 100<br>เกณฑ์ที่กำหนด ≥ 80%</div>
+            <div style="font-size:28px;font-weight:800;color:var(--pk6);margin-top:10px" id="effE1">—</div>
+          </div>
+          <div style="background:var(--bl1);border-radius:12px;padding:16px">
+            <div style="font-size:13px;font-weight:700;color:var(--bl6);margin-bottom:8px">E2 — ประสิทธิภาพผลลัพธ์</div>
+            <div style="font-size:12px;color:var(--g6);line-height:1.9">E2 = (Σคะแนนชิ้นงานสุดท้าย / คะแนนเต็ม) × 100<br>เกณฑ์ที่กำหนด ≥ 80%</div>
+            <div style="font-size:28px;font-weight:800;color:var(--bl6);margin-top:10px" id="effE2">—</div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--wh);border-radius:var(--r-md);padding:24px;box-shadow:var(--sh-sm);border:1px solid var(--g2)">
+        <div style="font-size:15px;font-weight:700;color:var(--g8);margin-bottom:14px">ผลทดสอบสมมติฐาน One Sample t-test</div>
+        <div class="tbl-wrap">
+          <table class="dtbl">
+            <thead><tr><th>ตัวแปร</th><th>x̄</th><th>S.D.</th><th>t-value</th><th>เกณฑ์</th><th>ผล</th></tr></thead>
+            <tbody id="ttestBody"><tr><td>ทักษะการเขียนโปรแกรม</td><td id="ttX">—</td><td id="ttSD">—</td><td id="ttT">—</td><td>80% (32/40)</td><td id="ttR">—</td></tr></tbody>
+          </table>
+        </div>
+        <div style="margin-top:14px;text-align:right">
+          <button class="btn-exp" onclick="exportEff()">⬇️ Export รายงาน E1/E2</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANAGE -->
+    <div class="tsec" id="ts-mgr">
+      <div class="tbar">
+        <div style="font-weight:700;font-size:15px;color:var(--g8)">⚙️ จัดการบัญชีนักเรียน</div>
+        <button class="btn-exp" onclick="toggleMForm()">+ เพิ่มนักเรียน</button>
+      </div>
+      <div class="mform" id="mForm">
+        <div style="font-weight:700;font-size:14px;color:var(--g8);margin-bottom:14px">เพิ่มนักเรียนใหม่</div>
+        <div class="mform-grid">
+          <div class="fgroup" style="margin:0"><label class="flabel">ชื่อ-นามสกุล</label><input class="finput" id="mName" placeholder="ชื่อ นามสกุล" /></div>
+          <div class="fgroup" style="margin:0"><label class="flabel">Username</label><input class="finput" id="mUser" placeholder="401001" /></div>
+          <div class="fgroup" style="margin:0"><label class="flabel">รหัสผ่าน</label><input class="finput" id="mPass" placeholder="รหัสผ่าน" /></div>
+          <div class="fgroup" style="margin:0"><label class="flabel">ห้อง</label>
+            <select class="fselect" id="mRoom"><option value="4/1">4/1</option><option value="4/2">4/2</option></select>
+          </div>
+        </div>
+        <div style="margin-top:14px;display:flex;gap:8px">
+          <button class="btn-exp" onclick="addStu()">✅ บันทึก</button>
+          <button class="btn-2nd" onclick="toggleMForm()">ยกเลิก</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table class="dtbl">
+          <thead><tr><th>ชื่อ-นามสกุล</th><th>Username</th><th>ห้อง</th><th>จัดการ</th></tr></thead>
+          <tbody id="mgrBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     PAGE: TEACHER INTRO
+================================================================ -->
+<div class="page" id="page-teacher-intro">
+  <nav class="navbar">
+    <div class="nav-brand" onclick="goTo('dashboard')">
+      <div class="nav-logo">💻</div><span>วิทยาการคำนวณ ป.4</span>
+    </div>
+    <div class="nav-right"><button class="btn-out" onclick="logout()">ออกจากระบบ</button></div>
+  </nav>
+  <div class="ti-wrap">
+    <div class="ti-card">
+      <div class="ti-cover">
+        <div class="ti-av-wrap"><div class="ti-av">👨‍🏫</div></div>
+      </div>
+      <div class="ti-body">
+        <div class="ti-name">นาย ฮาฟิส ตำภู</div>
+        <div class="ti-role">ครูผู้สอนวิชาวิทยาการคำนวณ • โรงเรียนกลับเพชรศึกษา</div>
+        <div class="ti-metas">
+          <div class="ti-meta">🎓 การศึกษามหาบัณฑิต (กศ.ม.)</div>
+          <div class="ti-meta">💻 สาขาเทคโนโลยีและสื่อสารการศึกษา</div>
+          <div class="ti-meta">🏛️ มหาวิทยาลัยทักษิณ ปีการศึกษา 2566</div>
+        </div>
+        <div class="ti-desc">
+          บทเรียนนี้พัฒนาขึ้นเป็นส่วนหนึ่งของวิทยานิพนธ์ระดับปริญญามหาบัณฑิต เรื่อง
+          <strong>"การพัฒนาบทเรียนไมโครเลิร์นนิงร่วมกับการจัดการเรียนรู้แบบผสมผสาน เพื่อพัฒนาทักษะการเขียนโปรแกรมเบื้องต้น สำหรับนักเรียนชั้นประถมศึกษาปีที่ 4"</strong>
+          <br><br>
+          ออกแบบตามหลักการ <strong>Microlearning</strong> เนื้อหากระชับ 3–5 นาทีต่อหัวข้อ
+          ผสานกับ <strong>Blended Learning (Flipped Classroom)</strong>
+          ให้นักเรียนเรียนออนไลน์ที่บ้านก่อน แล้วนำความรู้มาปฏิบัติจริงในห้องเรียน
+          โดยมี <strong>ดร. นุชนาฏ ใจดำรงค์</strong> เป็นประธานที่ปรึกษาวิทยานิพนธ์
+        </div>
+        <div class="ti-grid">
+          <div class="ti-gitem"><div class="ti-gl">รายวิชา</div><div class="ti-gv">วิทยาการคำนวณ</div></div>
+          <div class="ti-gitem"><div class="ti-gl">ระดับชั้น</div><div class="ti-gv">ประถมศึกษาปีที่ 4</div></div>
+          <div class="ti-gitem"><div class="ti-gl">จำนวนหน่วย</div><div class="ti-gv">2 หน่วย / 10 บทเรียน</div></div>
+          <div class="ti-gitem"><div class="ti-gl">ปีการศึกษา</div><div class="ti-gv">2569 ภาคเรียนที่ 1</div></div>
+          <div class="ti-gitem"><div class="ti-gl">เกณฑ์ประสิทธิภาพ</div><div class="ti-gv">E1/E2 = 80/80</div></div>
+          <div class="ti-gitem"><div class="ti-gl">อาจารย์ที่ปรึกษา</div><div class="ti-gv">ดร. นุชนาฏ ใจดำรงค์</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn-2nd" onclick="goTo('dashboard')">← กลับหน้าหลัก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     JAVASCRIPT
+================================================================ -->
+<script>
+/* ===== LESSON DATA ===== */
+const UNITS = {
+  1: {
+    title:'การเขียนโปรแกรมด้วย Scratch', icon:'🐱', color:'pk',
+    lessons:[
+      {id:'u1l1',title:'การใช้งานโปรแกรม Scratch เบื้องต้น',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['Scratch พัฒนาโดย MIT Media Lab เหมาะสำหรับเด็กเรียนการเขียนโปรแกรม','ส่วนประกอบหลัก: Stage (เวที), Sprite (ตัวละคร), Blocks Palette, Scripts Area','บล็อกสีน้ำเงิน = การเคลื่อนที่ | สีเหลือง = เหตุการณ์ | สีม่วง = ลักษณะ','กดธงเขียว ▶ เพื่อรันโปรแกรม กดหยุดสีแดงเพื่อหยุด','เริ่มต้นด้วยการลากบล็อกจาก Palette มาวางใน Scripts Area'],
+       quiz:[{q:'Scratch พัฒนาโดยสถาบันใด?',opts:['Google','MIT','Apple','Microsoft'],ans:1,ex:'Scratch พัฒนาโดย MIT Media Lab ประเทศสหรัฐอเมริกา'},{q:'บล็อกสีเหลืองใน Scratch คือหมวดใด?',opts:['Motion','Looks','Events','Sound'],ans:2,ex:'บล็อกสีเหลือง คือหมวด Events (เหตุการณ์) เช่น เมื่อกดธงเขียว'}],
+       assign:{title:'โจทย์ที่ 1: รู้จัก Scratch',desc:'ให้นักเรียนเปิดโปรแกรม Scratch สำรวจส่วนประกอบ แล้วทดลองเขียนคำสั่งเบื้องต้น',steps:['เปิด scratch.mit.edu หรือโปรแกรม Scratch บนคอมพิวเตอร์','สังเกตส่วนต่างๆ: Stage, Sprite, Blocks Palette, Scripts Area','ลากบล็อก "เดิน 10 ก้าว" มาวางใน Scripts Area','กดธงเขียวเพื่อทดสอบ ดูว่า Sprite เคลื่อนที่ไหม','ถ่ายรูปหน้าจอ Scratch ที่มีบล็อกคำสั่ง แล้วอัปโหลด']}},
+      {id:'u1l2',title:'การเขียนโปรแกรมแบบมีการเคลื่อนไหว',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['บล็อก "เดิน ___ ก้าว" ทำให้ Sprite เคลื่อนไปข้างหน้าตามทิศที่หัน','บล็อก "หมุน ___ องศา" หมุน Sprite ตามหรือทวนเข็มนาฬิกา','บล็อก "ไปที่ x:___ y:___" กำหนดตำแหน่งบน Stage','การต่อบล็อกหลายๆ อันเข้ากัน = สร้างการเคลื่อนไหวซับซ้อนได้','ทดสอบบ่อยๆ เพื่อดูและปรับผลลัพธ์'],
+       quiz:[{q:'บล็อกใดทำให้ Sprite เคลื่อนที่ไปข้างหน้า?',opts:['หมุน 15 องศา','เดิน 10 ก้าว','ไปที่ x:0 y:0','รอ 1 วินาที'],ans:1,ex:'บล็อก "เดิน ___ ก้าว" ทำให้ Sprite เคลื่อนที่ตามทิศทางที่หัน'}],
+       assign:{title:'โจทย์ที่ 2: แมววาดสี่เหลี่ยม',desc:'เขียนโปรแกรมให้แมว Sprite เดินวาดรูปสี่เหลี่ยมบน Stage (เดิน 100 ก้าว + หมุน 90 องศา × 4 รอบ)',steps:['ลากบล็อก "เมื่อกด 🚩" มาเป็นจุดเริ่ม','ต่อ "เดิน 100 ก้าว" และ "หมุน 90 องศา"','ทำซ้ำ 4 ครั้ง (4 ด้านของสี่เหลี่ยม)','กดธงเขียวทดสอบ ดู Sprite เดินครบ 4 ด้านไหม','ถ่ายรูปหน้าจอ Scripts Area แล้วอัปโหลด']}},
+      {id:'u1l3',title:'การเขียนโปรแกรมแบบวนซ้ำ',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['Loop คือการสั่งให้โปรแกรมทำซ้ำ โดยไม่ต้องเขียนบล็อกซ้ำๆ','บล็อก "ทำซ้ำ ___" วนซ้ำตามจำนวนที่กำหนด','บล็อก "ทำซ้ำตลอดไป" วนไม่มีที่สิ้นสุดจนกว่าจะกดหยุด','การใช้ Loop ช่วยย่นโค้ดและทำให้โปรแกรมอ่านง่ายขึ้น','ฝึกคิด: ถ้าต้องเดิน 50 ก้าว 10 ครั้ง เขียน Loop ได้อย่างไร?'],
+       quiz:[{q:'ถ้าต้องการให้ Sprite ทำซ้ำ 8 รอบ ควรใช้บล็อกใด?',opts:['ทำซ้ำตลอดไป','ทำซ้ำ 8','ถ้า...ทำ','รอ 8 วินาที'],ans:1,ex:'ใช้บล็อก "ทำซ้ำ 8" แล้วใส่คำสั่งที่ต้องการทำซ้ำข้างใน'}],
+       assign:{title:'โจทย์ที่ 3: วาดรูปหกเหลี่ยมด้วย Loop',desc:'ใช้บล็อก Loop เขียนโปรแกรมให้ Sprite วาดรูปหกเหลี่ยม (เดิน 80 ก้าว + หมุน 60 องศา × 6 รอบ)',steps:['เพิ่ม Extension "Pen" เข้า Scratch ก่อน','ลากบล็อก "วางปากกา" ก่อนเริ่ม Loop','ใส่บล็อก "ทำซ้ำ 6"','ข้างใน: เดิน 80 ก้าว + หมุน 60 องศา','กดธงเขียว ถ่ายรูปรูปหกเหลี่ยมที่ได้']}},
+      {id:'u1l4',title:'การเขียนโปรแกรมแบบมีเงื่อนไข',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['เงื่อนไข = การตัดสินใจ "ถ้า...ทำ...ไม่งั้น..."','บล็อก "ถ้า <เงื่อนไข> ทำ" คือ If Statement','บล็อก "ถ้า...ทำ...ไม่งั้น..." คือ If-Else Statement','ตัวอย่าง: ถ้าแตะขอบ ให้กระเด้งกลับ','เงื่อนไขทำให้โปรแกรมตอบสนองสถานการณ์ได้หลากหลาย'],
+       quiz:[{q:'"ถ้า...ทำ...ไม่งั้น..." ตรงกับคำสั่งใดในการเขียนโปรแกรม?',opts:['Loop','If-Else','Function','Variable'],ans:1,ex:'"ถ้า...ทำ...ไม่งั้น..." คือ If-Else Statement ซึ่งเป็นพื้นฐานการเขียนโปรแกรม'}],
+       assign:{title:'โจทย์ที่ 4: หุ่นหลบกำแพง',desc:'เขียนโปรแกรมให้ Sprite เดินตลอดเวลา และเมื่อชนขอบ Stage ให้กระเด้งกลับอัตโนมัติ',steps:['สร้างบล็อก: เมื่อกด 🚩','ใส่ "ทำซ้ำตลอดไป"','ข้างใน: "เดิน 5 ก้าว"','เพิ่มเงื่อนไข: "ถ้าแตะขอบ ให้กระเด้ง"','ทดสอบ ถ่ายวิดีโอหรือรูปหน้าจอ']}},
+      {id:'u1l5',title:'การเขียนโปรแกรมแบบมีตัวแปร',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['ตัวแปร (Variable) คือกล่องเก็บข้อมูลที่เปลี่ยนได้ เช่น คะแนน, จำนวนชีวิต','สร้างตัวแปรได้จากหมวด "Variables" ใน Scratch','บล็อก "กำหนด ___ เป็น ___" ใช้ตั้งค่าตัวแปร','บล็อก "เปลี่ยน ___ โดย ___" ใช้เพิ่มหรือลดค่า','ตัวอย่าง: สร้างเกมนับคะแนนด้วยตัวแปร Score'],
+       quiz:[{q:'ตัวแปร (Variable) ใน Scratch ใช้ทำอะไร?',opts:['วาดภาพ','เก็บข้อมูล','เล่นเสียง','เปลี่ยนสี'],ans:1,ex:'ตัวแปรใช้เก็บข้อมูลที่เปลี่ยนแปลงได้ เช่น คะแนน จำนวนชีวิต'}],
+       assign:{title:'โจทย์ที่ 5: เกมนับคะแนน',desc:'สร้างเกมที่มีตัวแปร "คะแนน" เมื่อกดสเปซบาร์ให้คะแนนเพิ่มขึ้น 1 ครั้ง',steps:['สร้างตัวแปร "คะแนน" ใน Variables','กำหนด คะแนน = 0 เมื่อกดธงเขียว','เพิ่มเหตุการณ์: เมื่อกดแป้น Space','ใส่บล็อก: เปลี่ยน คะแนน โดย 1','ทดสอบกด Space หลายครั้ง ถ่ายรูปคะแนนที่เพิ่มขึ้น']}}
+    ]
+  },
+  2: {
+    title:'การประยุกต์ใช้กับหุ่นยนต์ mBot', icon:'🤖', color:'bl',
+    lessons:[
+      {id:'u2l1',title:'พื้นฐานหุ่นยนต์ mBot',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['mBot คือหุ่นยนต์เพื่อการศึกษาพัฒนาโดย Makeblock ประเทศจีน','ส่วนประกอบ: บอร์ด mCore, มอเตอร์ 2 ตัว, เซนเซอร์, LED, Buzzer','เขียนโปรแกรมควบคุมด้วย mBlock (พัฒนาจาก Scratch)','เชื่อมต่อกับคอมพิวเตอร์ผ่าน USB หรือ Bluetooth','mBot ช่วยฝึกทักษะการเขียนโปรแกรมผ่านการลงมือทำจริง'],
+       quiz:[{q:'mBot พัฒนาโดยบริษัทใด?',opts:['LEGO','Makeblock','Arduino','Raspberry Pi'],ans:1,ex:'mBot พัฒนาโดยบริษัท Makeblock ประเทศจีน'}],
+       assign:{title:'โจทย์ที่ 6: รู้จัก mBot',desc:'สำรวจชิ้นส่วน mBot และวาดแผนผังส่วนประกอบพร้อมระบุชื่อแต่ละส่วน',steps:['รับหุ่นยนต์ mBot จากครู','สังเกตส่วนประกอบทั้งหมดอย่างละเอียด','วาดแผนผังและเขียนชื่อส่วนประกอบทุกชิ้น','ถ่ายรูป mBot พร้อมลูกศรชี้ส่วนต่างๆ','อัปโหลดรูปพร้อมเขียนอธิบายสั้นๆ']}},
+      {id:'u2l2',title:'การเชื่อมต่อและแสดงผลไฟ/เสียง',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['เปิด mBlock แล้วเชื่อมต่อ mBot ผ่าน USB หรือ Bluetooth','บล็อก "set LED color" ควบคุมไฟ RGB บน mBot','ค่าสี: R(แดง) G(เขียว) B(น้ำเงิน) ตั้งค่าได้ 0-255','บล็อก "play tone" ทำให้ Buzzer ส่งเสียงตามความถี่ที่กำหนด','ฝึกเขียนโปรแกรมไฟกะพริบสลับสีได้'],
+       quiz:[{q:'ค่า RGB ของสีแดงล้วนคือข้อใด?',opts:['R:0 G:255 B:0','R:255 G:0 B:0','R:0 G:0 B:255','R:255 G:255 B:255'],ans:1,ex:'สีแดงล้วน = R:255 G:0 B:0 (Red เต็ม Green และ Blue เป็น 0)'}],
+       assign:{title:'โจทย์ที่ 7: ไฟ RGB กะพริบสลับสี',desc:'เขียนโปรแกรมให้ LED บน mBot กะพริบสลับสี แดง→เขียว→น้ำเงิน ทุก 1 วินาที ต่อเนื่อง',steps:['เชื่อมต่อ mBot กับ mBlock ให้สำเร็จก่อน','ลากบล็อก "set LED color" สีแดง + รอ 1 วินาที','ต่อด้วย "สีเขียว" + รอ 1 วินาที, "สีน้ำเงิน" + รอ 1 วินาที','ใส่ใน Loop ทำซ้ำตลอดไป','ทดสอบ ถ่ายวิดีโอไฟกะพริบ']}},
+      {id:'u2l3',title:'การควบคุมทิศทาง mBot',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['บล็อก "move forward" / "move backward" ควบคุมมอเตอร์ทั้ง 2 ล้อ','บล็อก "turn left" / "turn right" เลี้ยวซ้าย-ขวา','บล็อก "stop" หยุดมอเตอร์ทั้งหมด','ความเร็วกำหนดได้ 0-255 (255 = เร็วที่สุด)','ฝึก: เขียนโปรแกรมให้ mBot เดินเป็นรูปสี่เหลี่ยม'],
+       quiz:[{q:'ถ้าต้องการให้ mBot เลี้ยวขวา ต้องใช้บล็อกใด?',opts:['move forward','stop','turn right','move backward'],ans:2,ex:'บล็อก "turn right" สั่งให้ mBot หมุนไปทางขวา'}],
+       assign:{title:'โจทย์ที่ 8: mBot เดินรูปสี่เหลี่ยม',desc:'เขียนโปรแกรมให้ mBot เดินเป็นรูปสี่เหลี่ยมจัตุรัส (เดินหน้า 1 วินาที + เลี้ยวขวา 0.5 วินาที × 4 รอบ)',steps:['สร้างบล็อก: move forward ความเร็ว 100, รอ 1 วินาที','ต่อ: turn right ความเร็ว 100, รอ 0.5 วินาที','ใส่ Loop ทำซ้ำ 4 ครั้ง','ตอนสุดท้ายใส่บล็อก stop','ทดสอบบนพื้น ถ่ายวิดีโอ mBot วิ่งเป็นสี่เหลี่ยม']}},
+      {id:'u2l4',title:'การใช้เซนเซอร์อัลตราโซนิก',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['เซนเซอร์อัลตราโซนิกวัดระยะห่างโดยใช้คลื่นเสียงความถี่สูง','ส่งคลื่น → รับสัญญาณสะท้อน → คำนวณระยะเป็นเซนติเมตร','บล็อก "distance" อ่านค่าระยะห่างหน้า mBot','ใช้ร่วมกับ If-Else: ถ้าระยะ < 15 ซม. ให้หยุด/ถอย','สร้างหุ่นยนต์หลบสิ่งกีดขวางอัตโนมัติได้'],
+       quiz:[{q:'เซนเซอร์อัลตราโซนิกทำงานด้วยอะไร?',opts:['แสง','คลื่นเสียง','ความร้อน','แม่เหล็ก'],ans:1,ex:'เซนเซอร์อัลตราโซนิกส่งคลื่นเสียงออกแล้วรับสัญญาณสะท้อนกลับมาคำนวณระยะทาง'}],
+       assign:{title:'โจทย์ที่ 9: หุ่นยนต์หลบสิ่งกีดขวาง',desc:'เขียนโปรแกรมให้ mBot ตรวจระยะห่าง ถ้าน้อยกว่า 15 ซม. ให้ถอยแล้วเลี้ยว',steps:['ใส่ Loop ทำซ้ำตลอดไป','อ่านค่า "distance" ด้วยเซนเซอร์อัลตราโซนิก','ใส่เงื่อนไข: ถ้า distance < 15 ทำ ถอยหลัง 0.5 วินาที + เลี้ยวขวา','ไม่งั้น: เดินหน้าต่อไป','วางสิ่งกีดขวางหน้า mBot ถ่ายวิดีโอผลลัพธ์']}},
+      {id:'u2l5',title:'การใช้เซนเซอร์ตรวจจับเส้น',dur:'5 นาที',vid:'dQw4w9WgXcQ',
+       sum:['Line Sensor ตรวจจับเส้นดำบนพื้นขาว ส่งค่า 0 หรือ 1','mBot มีเซนเซอร์ 2 ตัว: ด้านซ้ายและด้านขวา','หลักการ: 0=เจอเส้น, 1=ไม่เจอเส้น (อาจต่างตามรุ่น)','เขียน Logic: ซ้ายเจอเส้น→เลี้ยวซ้าย, ขวาเจอ→เลี้ยวขวา','Line Following Robot คือโปรเจกต์คลาสสิคของ mBot'],
+       quiz:[{q:'mBot มีเซนเซอร์ตรวจจับเส้นกี่ตัว?',opts:['1 ตัว','2 ตัว','3 ตัว','4 ตัว'],ans:1,ex:'mBot มีเซนเซอร์ตรวจจับเส้น 2 ตัว คือด้านซ้ายและด้านขวา'}],
+       assign:{title:'⭐ โจทย์ที่ 10: Line Follower (ชิ้นงานสุดท้าย)',desc:'[ชิ้นงานสำหรับคำนวณ E2] เขียนโปรแกรมให้ mBot วิ่งตามเส้นดำบนพื้น ใช้เซนเซอร์ 2 ตัวตรวจสอบและปรับทิศทางอัตโนมัติ',steps:['วางเส้นดำบนพื้นขาวเป็นรูปวงรี/วงกลม','อ่านค่าเซนเซอร์ซ้าย-ขวาด้วยบล็อก Line Follower','Logic: ซ้ายเจอ→เลี้ยวซ้าย, ขวาเจอ→เลี้ยวขวา, ไม่เจอ/เจอทั้งคู่→เดินหน้า','ทดสอบจนวิ่งตามเส้นได้สมบูรณ์','ถ่ายวิดีโอ mBot วิ่งตามเส้น (สำคัญมาก! ใช้ประเมิน E2)']}}
+    ]
+  }
+};
+
+/* ===== SATISFACTION QUESTIONS ===== */
+const SATQS = [
+  'บทเรียนไมโครเลิร์นนิงมีเนื้อหาที่กระชับ ชัดเจน เข้าใจง่าย',
+  'วิดีโอบทเรียนมีความยาวเหมาะสม (3–5 นาที) ไม่นานเกินไป',
+  'การนำเสนอเนื้อหาน่าสนใจ ดึงดูดความสนใจในการเรียน',
+  'บทเรียนช่วยให้เข้าใจการเขียนโปรแกรมเบื้องต้นได้ดีขึ้น',
+  'โจทย์ปฏิบัติมีความเหมาะสมสอดคล้องกับเนื้อหาที่เรียน',
+  'การเรียนที่บ้านก่อนแล้วค่อยปฏิบัติในห้อง ช่วยให้เรียนได้ดีขึ้น',
+  'สามารถเข้าถึงบทเรียนได้สะดวก ทุกที่ทุกเวลา',
+  'รู้สึกสนุกและมีแรงจูงใจในการเรียนวิทยาการคำนวณมากขึ้น',
+  'บทเรียนช่วยพัฒนาทักษะการเขียนโปรแกรมของตัวเอง',
+  'อยากให้มีบทเรียนแบบนี้ในรายวิชาอื่นๆ ด้วย'
+];
+const RLBLS = ['น้อยที่สุด','น้อย','ปานกลาง','มาก','มากที่สุด'];
+
+/* ===== STATE ===== */
+let user = null;
+let curUnit = 1, curLsn = 0;
+let rubDB = {};
+
+let studDB = [
+  {id:'s1',name:'เด็กชายก้อง ทองดี',user:'401001',pass:'1234',room:'4/1',w:[],s:[],sat:null},
+  {id:'s2',name:'เด็กหญิงมิ้น สดใส',user:'401002',pass:'1234',room:'4/1',w:[],s:[],sat:null},
+  {id:'s3',name:'เด็กชายเปรม ใจดี',user:'401003',pass:'1234',room:'4/1',w:[],s:[],sat:null},
+  {id:'s4',name:'เด็กหญิงแพร วงศ์งาม',user:'402001',pass:'1234',room:'4/2',w:[],s:[],sat:null},
+  {id:'s5',name:'เด็กชายนัท สุขสม',user:'402002',pass:'1234',room:'4/2',w:[],s:[],sat:null},
+];
+
+/* ===== NAVIGATION ===== */
+function goTo(pg){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+pg).classList.add('active');
+  window.scrollTo(0,0);
+}
+function logout(){ user=null; goTo('login'); }
+function backFromLesson(){ openUnit(curUnit); }
+
+/* ===== LOGIN ===== */
+function switchTab(type,btn){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('frm-student').style.display = type==='student'?'block':'none';
+  document.getElementById('frm-teacher').style.display = type==='teacher'?'block':'none';
+}
+
+function loginSt(){
+  const u=document.getElementById('su').value.trim();
+  const p=document.getElementById('sp').value.trim();
+  if(!u||!p){toast('กรุณากรอก username และรหัสผ่าน','err');return;}
+  const st=studDB.find(s=>s.user===u&&s.pass===p);
+  if(!st){toast('username หรือรหัสผ่านไม่ถูกต้อง','err');return;}
+  user=st;
+  renderDash();
+  goTo('dashboard');
+  toast('ยินดีต้อนรับ '+st.name.split(' ')[0]+' 👋','ok');
+}
+
+function loginTe(){
+  const u=document.getElementById('tu').value.trim();
+  const p=document.getElementById('tp').value.trim();
+  if(u==='teacher'&&p==='1234'){
+    renderTeacher();
+    goTo('teacher');
+    toast('ยินดีต้อนรับครู 👩‍🏫','ok');
+  } else {
+    toast('username หรือรหัสผ่านไม่ถูกต้อง','err');
+  }
+}
+
+/* ===== DASHBOARD ===== */
+function renderDash(){
+  if(!user)return;
+  document.getElementById('dname').textContent=user.name;
+  document.getElementById('droom').textContent='ห้อง '+user.room+' • ภาคเรียนที่ 1 ปีการศึกษา 2569';
+  setNavs();
+  updProgress();
+  renderPills(1); renderPills(2);
+  updOverview();
+}
+
+function setNavs(){
+  if(!user)return;
+  const init=user.name.charAt(0);
+  const fn=user.name.split(' ')[0]||user.name;
+  [1,2,3].forEach(i=>{
+    const av=document.getElementById('av'+i);
+    const nn=document.getElementById('nn'+i);
+    if(av)av.textContent=init;
+    if(nn)nn.textContent=fn;
+  });
+}
+
+function updProgress(){
+  if(!user)return;
+  const u1d=UNITS[1].lessons.filter(l=>user.w.includes(l.id)).length;
+  const u2d=UNITS[2].lessons.filter(l=>user.w.includes(l.id)).length;
+  document.getElementById('sw').textContent=(u1d+u2d)+'/10';
+  document.getElementById('ss').textContent=user.s.length+'/10';
+  const scores=Object.values(rubDB[user.id]||{});
+  const avg=scores.length?(scores.reduce((a,b)=>a+b,0)/scores.length).toFixed(1):'-';
+  document.getElementById('savg').textContent=avg;
+  const p1=Math.round(u1d/5*100), p2=Math.round(u2d/5*100);
+  document.getElementById('pb1').style.width=p1+'%';
+  document.getElementById('pb2').style.width=p2+'%';
+  document.getElementById('pt1').textContent=u1d+' / 5 บทเรียน';
+  document.getElementById('pt2').textContent=u2d+' / 5 บทเรียน';
+  document.getElementById('pp1').textContent=p1+'%';
+  document.getElementById('pp2').textContent=p2+'%';
+}
+
+function renderPills(u){
+  const c=document.getElementById('pills'+u);
+  c.innerHTML='';
+  UNITS[u].lessons.forEach((l,i)=>{
+    const done=user&&user.w.includes(l.id);
+    const pill=document.createElement('div');
+    pill.className='pill '+(done?'done':'todo');
+    pill.textContent=(done?'✅':'📖')+' เรื่อง '+(i+1);
+    pill.onclick=e=>{e.stopPropagation();openLesson(u,i);};
+    c.appendChild(pill);
+  });
+}
+
+/* ===== UNIT PAGE ===== */
+function openUnit(u){
+  curUnit=u;
+  const unit=UNITS[u];
+  document.getElementById('ubc').textContent='หน่วยที่ '+u;
+  document.getElementById('utitle').textContent=unit.title;
+  renderGrid(u);
+  goTo('unit');
+}
+
+function renderGrid(u){
+  const g=document.getElementById('lgrid');
+  g.innerHTML='';
+  UNITS[u].lessons.forEach((l,i)=>{
+    const done=user&&user.w.includes(l.id);
+    const sub=user&&user.s.includes(l.id);
+    const div=document.createElement('div');
+    div.className='lcard '+(done?'done':'');
+    div.style.animationDelay=(i*.05)+'s';
+    const ncls=done?'dn':UNITS[u].color;
+    div.innerHTML=`
+      <div class="lnum ${ncls}">${done?'✅':i+1}</div>
+      <div class="linfo">
+        <div class="ltitle">${l.title}</div>
+        <div class="lmeta">⏱ ${l.dur} • เรื่องที่ ${i+1}</div>
+        <div>
+          <span class="badge badge-home">🏠 เรียนที่บ้าน</span>
+          <span class="badge badge-class">🏫 ปฏิบัติในห้อง</span>
+          ${done?'<span class="badge badge-done">✅ ดูแล้ว</span>':''}
+          ${sub?'<span class="badge badge-done">📤 ส่งแล้ว</span>':''}
+        </div>
+      </div>`;
+    div.onclick=()=>openLesson(u,i);
+    g.appendChild(div);
+  });
+}
+
+/* ===== LESSON PAGE ===== */
+function openLesson(u,idx){
+  curUnit=u; curLsn=idx;
+  const l=UNITS[u].lessons[idx];
+  document.getElementById('lbc1').textContent='หน่วยที่ '+u;
+  document.getElementById('lbc2').textContent=l.title;
+  document.getElementById('lpTitle').textContent=l.title;
+  document.getElementById('vdur').textContent='⏱ ประมาณ '+l.dur;
+  // reset video
+  const fr=document.getElementById('vframe');
+  fr.src=''; fr.classList.remove('on');
+  document.getElementById('vph').style.display='flex';
+  // content
+  renderSummary(l); renderQuiz(l); renderAssign(l); renderLnav(u,idx);
+  // mark watched
+  if(user&&!user.w.includes(l.id)){user.w.push(l.id);updProgress();}
+  goTo('lesson');
+}
+
+function playVideo(){
+  const l=UNITS[curUnit].lessons[curLsn];
+  const fr=document.getElementById('vframe');
+  fr.src='https://www.youtube.com/embed/'+l.vid+'?autoplay=1';
+  fr.classList.add('on');
+  document.getElementById('vph').style.display='none';
+}
+
+function renderSummary(l){
+  document.getElementById('lsummary').innerHTML=
+    l.sum.map(s=>`<li><div class="sdot"></div><span>${s}</span></li>`).join('');
+}
+
+function renderQuiz(l){
+  const el=document.getElementById('lquiz');
+  el.innerHTML='';
+  l.quiz.forEach((q,qi)=>{
+    const d=document.createElement('div');
+    d.innerHTML=`
+      ${qi>0?'<hr class="quiz-sep">':''}
+      <div class="quiz-q">❓ ข้อ ${qi+1}: ${q.q}</div>
+      <div class="quiz-opts">
+        ${q.opts.map((o,oi)=>`<button class="quiz-opt" id="qo-${qi}-${oi}" onclick="checkQ(${qi},${oi},${q.ans},'${encodeURIComponent(q.ex)}')">${o}</button>`).join('')}
+      </div>
+      <div class="quiz-fb" id="qf-${qi}"></div>`;
+    el.appendChild(d);
+  });
+}
+
+function checkQ(qi,oi,ans,ex){
+  document.querySelectorAll(`[id^="qo-${qi}-"]`).forEach((b,i)=>{
+    b.disabled=true;
+    if(i===ans)b.classList.add('correct');
+    else if(i===oi&&oi!==ans)b.classList.add('wrong');
+  });
+  const fb=document.getElementById('qf-'+qi);
+  fb.classList.add('show');
+  if(oi===ans){fb.className='quiz-fb show ok';fb.textContent='✅ ถูกต้อง! '+decodeURIComponent(ex);}
+  else{fb.className='quiz-fb show no';fb.textContent='❌ '+decodeURIComponent(ex);}
+}
+
+function renderAssign(l){
+  document.getElementById('atitle').textContent=l.assign.title;
+  document.getElementById('adesc').textContent=l.assign.desc;
+  document.getElementById('asteps').innerHTML=l.assign.steps.map((s,i)=>
+    `<div class="step"><div class="step-n">${i+1}</div><span>${s}</span></div>`).join('');
+  document.getElementById('aanswer').value='';
+  document.getElementById('prevBox').style.display='none';
+}
+
+function renderLnav(u,cur){
+  const nav=document.getElementById('lnav');
+  nav.innerHTML='';
+  UNITS[u].lessons.forEach((l,i)=>{
+    const done=user&&user.w.includes(l.id);
+    const isCur=i===cur;
+    const div=document.createElement('div');
+    div.className='lnav-item '+(isCur?'cur':'');
+    div.innerHTML=`<div class="ndot ${isCur?'cur':done?'done':'todo'}"></div><span>${i+1}. ${l.title.length>22?l.title.slice(0,22)+'…':l.title}</span>`;
+    div.onclick=()=>openLesson(u,i);
+    nav.appendChild(div);
+  });
+  const d=UNITS[u].lessons.filter(l=>user&&user.w.includes(l.id)).length;
+  const pct=Math.round(d/5*100);
+  document.getElementById('lpbar').style.width=pct+'%';
+  document.getElementById('lptext').textContent=d+' / 5 บทเรียน';
+}
+
+function prevFile(inp){
+  const f=inp.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    document.getElementById('prevImg').src=e.target.result;
+    document.getElementById('prevBox').style.display='block';
+  };
+  r.readAsDataURL(f);
+}
+
+function submitWork(){
+  const ans=document.getElementById('aanswer').value.trim();
+  if(!ans){toast('กรุณาพิมพ์คำตอบก่อนส่ง','err');return;}
+  const l=UNITS[curUnit].lessons[curLsn];
+  if(user&&!user.s.includes(l.id)){user.s.push(l.id);updProgress();}
+  toast('ส่งชิ้นงานเรียบร้อย! ✅','ok');
+}
+
+/* ===== SATISFACTION ===== */
+function buildSatForm(){
+  const f=document.getElementById('satForm');
+  f.innerHTML=SATQS.map((q,i)=>`
+    <div class="sat-item">
+      <div class="sat-q">${i+1}. ${q}</div>
+      <div class="rating-row">
+        ${[1,2,3,4,5].map(r=>`
+          <button class="rbtn" id="rb-${i}-${r}" onclick="pickR(${i},${r})">
+            <span class="rn">${r}</span>
+            <span class="rl">${RLBLS[r-1]}</span>
+          </button>`).join('')}
+      </div>
+      <div class="scale-lbl"><span>น้อยที่สุด</span><span>มากที่สุด</span></div>
+    </div>`).join('');
+}
+
+function pickR(qi,v){
+  [1,2,3,4,5].forEach(r=>document.getElementById(`rb-${qi}-${r}`).classList.remove('on'));
+  document.getElementById(`rb-${qi}-${v}`).classList.add('on');
+}
+
+function submitSat(){
+  const ans=[];
+  let inc=false;
+  SATQS.forEach((_,i)=>{
+    const sel=document.querySelector(`[id^="rb-${i}-"].on`);
+    if(!sel){inc=true;}else ans.push(parseInt(sel.id.split('-')[2]));
+  });
+  if(inc){toast('กรุณาตอบให้ครบทุกข้อ','err');return;}
+  if(user){
+    user.sat=ans;
+    const avg=(ans.reduce((a,b)=>a+b,0)/ans.length).toFixed(2);
+    updOverview();
+    toast(`ส่งแบบประเมินเรียบร้อย! ค่าเฉลี่ย ${avg}/5 ⭐`,'ok');
+    setTimeout(()=>goTo('dashboard'),2000);
+  }
+}
+
+/* ===== TEACHER PANEL ===== */
+function openTTab(t,btn){
+  document.querySelectorAll('.ttab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.tsec').forEach(s=>s.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('ts-'+t).classList.add('on');
+  if(t==='stu')renderStuTable('all');
+  if(t==='rub')renderRub();
+  if(t==='mgr')renderMgr();
+  if(t==='eff')renderEff();
+}
+
+function renderTeacher(){
+  updOverview();
+  renderStuTable('all');
+  renderRub();
+  renderMgr();
+  renderEff();
+}
+
+function updOverview(){
+  document.getElementById('ovTotal').textContent=studDB.length;
+  const watched=studDB.filter(s=>s.w.length>0).length;
+  const subAll=studDB.filter(s=>s.s.length>=10).length;
+  document.getElementById('ovWatch').textContent=watched;
+  document.getElementById('ovSub').textContent=subAll;
+  const satAll=studDB.filter(s=>s.sat&&s.sat.length);
+  const satAvg=satAll.length?(satAll.reduce((a,s)=>a+(s.sat.reduce((x,y)=>x+y,0)/s.sat.length),0)/satAll.length).toFixed(2):'—';
+  document.getElementById('ovSat').textContent=satAvg;
+  calcEff();
+}
+
+function calcEff(){
+  const all=studDB.map(s=>{const sc=Object.values(rubDB[s.id]||{});return sc.length?sc.reduce((a,b)=>a+b,0):0;});
+  const totalMax=studDB.length*40;
+  const e1=totalMax>0?(all.reduce((a,b)=>a+b,0)/totalMax*100).toFixed(1)+'%':'—';
+  const last=studDB.map(s=>rubDB[s.id]?.l10||0);
+  const e2Max=studDB.length*4;
+  const e2=e2Max>0?(last.reduce((a,b)=>a+b,0)/e2Max*100).toFixed(1)+'%':'—';
+  const pass=studDB.filter(s=>{const sc=Object.values(rubDB[s.id]||{});const tot=sc.length?sc.reduce((a,b)=>a+b,0):0;return tot/40*100>=80;}).length;
+  ['bE1','effE1'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=e1;});
+  ['bE2','effE2'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=e2;});
+  const bP=document.getElementById('bPass');if(bP)bP.textContent=pass+'/'+studDB.length;
+  return{e1,e2,pass};
+}
+
+function fRoom(btn,rm){
+  document.querySelectorAll('.filt-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderStuTable(rm);
+}
+
+function renderStuTable(rm){
+  const tbody=document.getElementById('stuBody');
+  tbody.innerHTML='';
+  const list=rm==='all'?studDB:studDB.filter(s=>s.room===rm);
+  list.forEach(s=>{
+    const sc=Object.values(rubDB[s.id]||{});
+    const avg=sc.length?(sc.reduce((a,b)=>a+b,0)/sc.length).toFixed(1):'-';
+    const satAvg=s.sat?(s.sat.reduce((a,b)=>a+b,0)/s.sat.length).toFixed(1):'-';
+    const done=s.s.length>=10;
+    const cls=done?'ok':s.s.length>0?'pt':'no';
+    const lbl=done?'✅ ครบแล้ว':s.s.length>0?`📋 ${s.s.length}/10`:'⏳ ยังไม่ส่ง';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.name}</td><td>${s.room}</td><td>${s.w.length}/10</td><td>${s.s.length}/10</td><td>${avg}</td><td>${satAvg}</td><td>${new Date().toLocaleDateString('th-TH')}</td><td><span class="stag ${cls}">${lbl}</span></td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderRub(){
+  const rm=document.getElementById('rubRoom').value;
+  const tb=document.getElementById('rubBody');
+  tb.innerHTML='';
+  studDB.filter(s=>s.room===rm).forEach(s=>{
+    if(!rubDB[s.id])rubDB[s.id]={};
+    const cells=[1,2,3,4,5,6,7,8,9,10].map(n=>{
+      const v=rubDB[s.id]['l'+n]||'';
+      return `<td><input class="rinput" type="number" min="1" max="4" value="${v}" id="ri-${s.id}-${n}" onchange="rubDB['${s.id}']['l'+${n}]=parseInt(this.value)||0;updRubTot('${s.id}')" /></td>`;
+    }).join('');
+    const tot=Object.values(rubDB[s.id]).reduce((a,b)=>a+b,0);
+    const pct=(tot/40*100).toFixed(1);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.name}</td>${cells}<td id="rt-${s.id}" style="font-weight:700">${tot}</td><td id="rp-${s.id}">${pct}%</td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function updRubTot(sid){
+  const tot=Object.values(rubDB[sid]||{}).reduce((a,b)=>a+b,0);
+  const pct=(tot/40*100).toFixed(1);
+  const rt=document.getElementById('rt-'+sid);
+  const rp=document.getElementById('rp-'+sid);
+  if(rt)rt.textContent=tot;
+  if(rp)rp.textContent=pct+'%';
+  calcEff();
+}
+
+function saveRub(){ toast('บันทึกคะแนน Rubric เรียบร้อย ✅','ok'); calcEff(); }
+
+function renderEff(){
+  calcEff();
+  // t-test mock
+  const scores=studDB.map(s=>{const sc=Object.values(rubDB[s.id]||{});return sc.length?sc.reduce((a,b)=>a+b,0):0;});
+  if(scores.every(s=>s===0)){
+    document.getElementById('ttX').textContent='—';
+    document.getElementById('ttSD').textContent='—';
+    document.getElementById('ttT').textContent='—';
+    document.getElementById('ttR').innerHTML='<span class="stag no">รอข้อมูล</span>';
+    return;
+  }
+  const mean=scores.reduce((a,b)=>a+b,0)/scores.length;
+  const sd=Math.sqrt(scores.reduce((a,b)=>a+(b-mean)**2,0)/scores.length);
+  const mu=32;// 80% of 40
+  const t=((mean-mu)/(sd/Math.sqrt(scores.length))).toFixed(2);
+  document.getElementById('ttX').textContent=mean.toFixed(2);
+  document.getElementById('ttSD').textContent=sd.toFixed(2);
+  document.getElementById('ttT').textContent=t;
+  const pass=parseFloat(t)>0;
+  document.getElementById('ttR').innerHTML=`<span class="stag ${pass?'ok':'no'}">${pass?'✅ ผ่านเกณฑ์':'❌ ไม่ผ่านเกณฑ์'}</span>`;
+}
+
+/* ===== MANAGE ===== */
+function toggleMForm(){
+  const f=document.getElementById('mForm');
+  f.classList.toggle('open');
+}
+
+function addStu(){
+  const n=document.getElementById('mName').value.trim();
+  const u=document.getElementById('mUser').value.trim();
+  const p=document.getElementById('mPass').value.trim();
+  const r=document.getElementById('mRoom').value;
+  if(!n||!u||!p){toast('กรุณากรอกข้อมูลให้ครบ','err');return;}
+  studDB.push({id:'s'+Date.now(),name:n,user:u,pass:p,room:r,w:[],s:[],sat:null});
+  renderMgr(); updOverview();
+  document.getElementById('mForm').classList.remove('open');
+  toast('เพิ่มนักเรียน '+n+' เรียบร้อย ✅','ok');
+}
+
+function renderMgr(){
+  const tb=document.getElementById('mgrBody');
+  tb.innerHTML='';
+  studDB.forEach((s,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${s.name}</td><td><code style="background:var(--g1);padding:2px 6px;border-radius:4px">${s.user}</code></td><td>${s.room}</td>
+      <td>
+        <button class="btn-2nd" style="padding:4px 10px;font-size:12px" onclick="resetP(${i})">รีเซ็ตรหัส</button>
+        <button class="btn-2nd" style="padding:4px 10px;font-size:12px;margin-left:4px;color:var(--red);border-color:var(--red)" onclick="delStu(${i})">ลบ</button>
+      </td>`;
+    tb.appendChild(tr);
+  });
+}
+
+function resetP(i){ studDB[i].pass='1234'; toast('รีเซ็ตรหัสผ่านเป็น 1234 แล้ว','ok'); }
+function delStu(i){ studDB.splice(i,1); renderMgr(); updOverview(); toast('ลบนักเรียนเรียบร้อย','ok'); }
+
+/* ===== EXPORT ===== */
+function doExport(){
+  const rows=[['ชื่อ-นามสกุล','ห้อง','ดูวิดีโอ','ส่งงาน','คะแนน Rubric รวม','คะแนน %','ความพึงพอใจ']];
+  studDB.forEach(s=>{
+    const tot=Object.values(rubDB[s.id]||{}).reduce((a,b)=>a+b,0);
+    const pct=(tot/40*100).toFixed(1);
+    const sat=s.sat?(s.sat.reduce((a,b)=>a+b,0)/s.sat.length).toFixed(2):'';
+    rows.push([s.name,s.room,s.w.length,s.s.length,tot,pct,sat]);
+  });
+  dl(rows,'ข้อมูลนักเรียน_วิทยาการคำนวณ_ป4');
+}
+
+function exportEff(){
+  const rows=[
+    ['รายงานประสิทธิภาพบทเรียนไมโครเลิร์นนิง'],
+    ['รายวิชา','วิทยาการคำนวณ ชั้น ป.4'],
+    ['เกณฑ์','E1/E2 = 80/80'],
+    [''],
+    ['ชื่อนักเรียน','ห้อง',...[1,2,3,4,5,6,7,8,9,10].map(n=>'เรื่องที่'+n),'รวม','%']
+  ];
+  studDB.forEach(s=>{
+    const sc=[1,2,3,4,5,6,7,8,9,10].map(n=>rubDB[s.id]?.['l'+n]||0);
+    const tot=sc.reduce((a,b)=>a+b,0);
+    rows.push([s.name,s.room,...sc,tot,(tot/40*100).toFixed(1)+'%']);
+  });
+  dl(rows,'รายงานประสิทธิภาพ_E1_E2');
+}
+
+function dl(rows,name){
+  const csv=rows.map(r=>r.join(',')).join('\n');
+  const b=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(b);
+  a.download=name+'.csv'; a.click();
+  toast('Export '+name+'.csv เรียบร้อย ✅','ok');
+}
+
+/* ===== TOAST ===== */
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=(type==='ok'?'✅ ':type==='err'?'❌ ':'')+msg;
+  t.className='toast '+(type==='ok'?'ok':type==='err'?'err':'')+' show';
+  setTimeout(()=>t.classList.remove('show'),3200);
+}
+
+/* ===== INIT ===== */
+buildSatForm();
+</script>
+</body>
+</html>
